@@ -230,15 +230,15 @@ body::before { content:''; position:fixed; inset:0; background:repeating-linear-
 <body>
 
 <div class="topbar">
-  <div class="tb-l">OVO Sound Intelligence Division · v3</div>
+  <div class="tb-l">Drake Drop Tracker · OVO Watch</div>
   <div class="tb-r"><span class="dot"></span>LIVE · <span id="tb-date">—</span></div>
 </div>
 
 <div class="hero">
-  <div class="eyebrow">Seasonal Release Model · Live Signal Scraping · Feb 26 2026</div>
+  <div class="eyebrow">When is Drizzy dropping · Updated Daily · Live Signals</div>
   <div class="title">ICEMAN</div>
   <div class="title-sub">O · M E T E R ™</div>
-  <div class="version">v3.0 · Seasonal + Survival Hybrid · No Average Distance</div>
+  <div class="version">v3.0 · Built because Drake won't tell us himself</div>
 </div>
 
 <div class="counters">
@@ -252,13 +252,13 @@ body::before { content:''; position:fixed; inset:0; background:repeating-linear-
   <div class="pred-card">
     <div class="pred-grid">
       <div class="pred-left">
-        <div class="pred-eyebrow">Seasonal Model · Predicted Drop Window</div>
+        <div class="pred-eyebrow">🎯 Our Best Guess · Predicted Drop Window</div>
         <div class="pred-date-big" id="pred-date-big">Loading…</div>
         <div class="pred-window" id="pred-window">Calculating window…</div>
         <div class="pred-rationale" id="pred-rationale">Building model…</div>
       </div>
       <div class="pred-right">
-        <div class="seasonal-chart-title">Historical Release Probability by Month</div>
+        <div class="seasonal-chart-title">Which months Drake historically drops</div>
         <div class="month-bars" id="month-bars"></div>
       </div>
     </div>
@@ -267,7 +267,7 @@ body::before { content:''; position:fixed; inset:0; background:repeating-linear-
 
 <!-- ═══ LIVE SIGNALS ═══ -->
 <div class="wrap" style="margin-top:20px;">
-  <div class="sec-title" style="margin-bottom:14px; font-size:11px; letter-spacing:.4em; color:var(--muted); text-transform:uppercase; font-weight:600;">Live Signal Intelligence · Scraped Now</div>
+  <div class="sec-title" style="margin-bottom:14px; font-size:11px; letter-spacing:.4em; color:var(--muted); text-transform:uppercase; font-weight:600;">Live Buzz Check · What The Internet Is Saying Right Now</div>
   <div class="signals-grid">
 
     <div class="sig-card gold">
@@ -287,7 +287,7 @@ body::before { content:''; position:fixed; inset:0; background:repeating-linear-
     </div>
 
     <div class="sig-card red">
-      <div class="sig-source"> Google Trends</div>
+      <div class="sig-source">📈 Google Trends</div>
       <div class="sig-status amber" id="trends-status">Manual</div>
       <div class="sig-detail" id="trends-detail">CORS-blocked · enter your reading below</div>
       <div style="margin-top:10px; display:flex; gap:8px; align-items:center;">
@@ -300,7 +300,7 @@ body::before { content:''; position:fixed; inset:0; background:repeating-linear-
     </div>
 
     <div class="sig-card grn">
-      <div class="sig-source"> OVO / Drake Socials</div>
+      <div class="sig-source">🎵 OVO / Drake Socials</div>
       <div class="sig-status green" id="ovo-status">Fetching…</div>
       <div class="sig-detail" id="ovo-detail">Checking OVO RSS activity…</div>
       <div class="sig-weight neu" id="ovo-weight">—</div>
@@ -313,11 +313,11 @@ body::before { content:''; position:fixed; inset:0; background:repeating-linear-
 <!-- ═══ SIGNAL COMPOSITE SCORE ═══ -->
 <div class="wrap" style="margin-top:20px;">
   <div class="section-card">
-    <div class="sec-title">Signal Composite Score — How Close Is The Drop?</div>
+    <div class="sec-title">Hype Score — How Close Does It Feel?</div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:center;">
       <div>
         <div style="font-family:'Bebas Neue',sans-serif; font-size:80px; line-height:1;" id="composite-num">—</div>
-        <div style="font-size:13px; color:var(--muted2); margin-top:6px;" id="composite-label">out of 100 · weighted signal score</div>
+        <div style="font-size:13px; color:var(--muted2); margin-top:6px;" id="composite-label">out of 100 · based on live internet signals</div>
         <div style="margin-top:16px; height:10px; background:var(--border); border-radius:5px; overflow:hidden;">
           <div id="composite-bar" style="height:100%; width:0%; border-radius:5px; transition:width 1.5s cubic-bezier(.22,1,.36,1); background:linear-gradient(90deg,var(--gold-d),var(--gold),var(--gold-l));"></div>
         </div>
@@ -333,9 +333,9 @@ body::before { content:''; position:fixed; inset:0; background:repeating-linear-
   <div class="hz-card">
     <div class="hz-grid">
       <div>
-        <div class="hz-label">Hazard Rate · This Week</div>
-        <div class="hz-title">Conditional probability Iceman drops this week</div>
-        <div class="hz-desc">P(drops in next 7 days | <em>hasn't dropped yet</em>) — Log-Normal survival, fat right tail. Not cumulative.</div>
+        <div class="hz-label">This Week's Drop Chance</div>
+        <div class="hz-title">What are the odds Iceman drops this week?</div>
+        <div class="hz-desc">Based on how long Drake usually waits — <em>accounting for the fact that he still hasn't dropped.</em> Updates every day. Not a running total.</div>
         <div id="delta" class="delta fl"><span id="d-text">Calculating…</span></div>
       </div>
       <div class="hz-right">
@@ -344,7 +344,7 @@ body::before { content:''; position:fixed; inset:0; background:repeating-linear-
       </div>
     </div>
     <div class="spark-wrap">
-      <div class="spark-label">Weekly hazard rate — past 52 weeks</div>
+      <div class="spark-label">How this week's drop chance has changed over the past year</div>
       <svg class="spark-svg" id="spark" viewBox="0 0 800 72" preserveAspectRatio="none"></svg>
     </div>
   </div>
@@ -355,8 +355,8 @@ body::before { content:''; position:fixed; inset:0; background:repeating-linear-
   <div class="gauge-card">
     <div class="g-head">
       <div>
-        <div class="g-title">Cumulative Drop Probability · Log-Normal(μ=3.5, σ=1.6)</div>
-        <div class="g-desc">Fat right tail — won't saturate at 100% even past day 600.</div>
+        <div class="g-title">Overall Probability He's Dropped By Now</div>
+        <div class="g-desc">If you picked a random day, this is the chance Iceman would already be out. Keeps rising but never quite hits 100% — because Drake.</div>
       </div>
       <div class="g-pct" id="g-pct">—%</div>
     </div>
@@ -368,7 +368,7 @@ body::before { content:''; position:fixed; inset:0; background:repeating-linear-
 <!-- ═══ TIMELINE ═══ -->
 <div class="wrap" style="margin-top:20px;">
   <div class="section-card">
-    <div class="sec-title">Monthly Breakdown — Cumulative % &amp; Weekly Hazard</div>
+    <div class="sec-title">Month by Month — How Likely Was a Drop?</div>
     <div class="t-rows" id="t-rows"></div>
   </div>
 </div>
@@ -377,34 +377,34 @@ body::before { content:''; position:fixed; inset:0; background:repeating-linear-
 <div class="wrap" style="margin-top:20px;">
   <div class="cards-grid">
     <div class="card ag">
-      <div class="c-label">Seasonal Prediction</div>
+      <div class="c-label">Our Prediction</div>
       <div class="c-val gold" id="c-pred">—</div>
       <div class="c-sub" id="c-pred-sub">—</div>
     </div>
     <div class="card ai">
-      <div class="c-label">Next Hot Window</div>
+      <div class="c-label">Drop Window</div>
       <div class="c-val ice" id="c-win">—</div>
-      <div class="c-sub">Based on Drake's historical release calendar</div>
+      <div class="c-sub">Give or take 3 weeks either side</div>
     </div>
     <div class="card ar">
-      <div class="c-label">Times Over Historical Avg</div>
+      <div class="c-label">How Overdue Is This</div>
       <div class="c-val red" id="c-xavg">—×</div>
-      <div class="c-sub">Avg is 99d. This is unprecedented territory.</div>
+      <div class="c-sub">Drake's usual wait is 99 days. This is not that.</div>
     </div>
     <div class="card ag">
-      <div class="c-label">Beef→Drop Lag (Historical)</div>
-      <div class="c-val gold">52 days</div>
-      <div class="c-sub">Avg days from beef ending to drop. Beef ended ~May 2024 — 638 days ago.</div>
+      <div class="c-label">Time Since The Beef Ended</div>
+      <div class="c-val gold">638+ days</div>
+      <div class="c-sub">The Kendrick war ended ~May 2024. Scorpion dropped 91 days after its beef. Just saying.</div>
     </div>
     <div class="card ai">
-      <div class="c-label">Peak Seasonal Window</div>
+      <div class="c-label">Best Month To Drop</div>
       <div class="c-val ice">Mar — Jun</div>
-      <div class="c-sub">63% of Drake albums dropped in this window historically</div>
+      <div class="c-sub">63% of Drake albums have dropped in this window. Summer Drake is real.</div>
     </div>
     <div class="card ar">
-      <div class="c-label">Bootstrap 95% CI</div>
+      <div class="c-label">How Far Off The Charts</div>
       <div class="c-val red">[ 47 — 151d ]</div>
-      <div class="c-sub">Iceman is <span id="c-out" style="color:var(--red);">—</span> outside upper bound</div>
+      <div class="c-sub">That's the normal range. Iceman is <span id="c-out" style="color:var(--red);">—</span> past it.</div>
     </div>
   </div>
 </div>
@@ -413,24 +413,24 @@ body::before { content:''; position:fixed; inset:0; background:repeating-linear-
 <div class="wrap" style="margin-top:20px;">
   <div class="m-grid">
     <div class="mc win">
-      <div class="m-label"> Seasonal Model</div>
+      <div class="m-label">🏆 Our Best Guess</div>
       <div class="m-date" id="m0">—</div>
-      <div class="m-mae">Next peak release window · primary</div>
+      <div class="m-mae">Based on Drake's release calendar patterns</div>
     </div>
     <div class="mc">
-      <div class="m-label">Ridge Regression</div>
+      <div class="m-label">Conservative Estimate</div>
       <div class="m-date" id="m1">—</div>
-      <div class="m-mae">MAE ±83d · feature-based</div>
+      <div class="m-mae">Assuming things speed up from here</div>
     </div>
     <div class="mc">
-      <div class="m-label">Random Forest</div>
+      <div class="m-label">If History Repeats</div>
       <div class="m-date" id="m2">—</div>
-      <div class="m-mae">MAE ±96d · depth=3</div>
+      <div class="m-mae">Closest match to past album cycles</div>
     </div>
     <div class="mc">
-      <div class="m-label">Survival Mode</div>
+      <div class="m-label">At This Rate…</div>
       <div class="m-date" id="m3">—</div>
-      <div class="m-mae">Log-Normal conditional mode from today</div>
+      <div class="m-mae">If the current pace continues</div>
     </div>
   </div>
 </div>
@@ -438,7 +438,7 @@ body::before { content:''; position:fixed; inset:0; background:repeating-linear-
 <!-- ═══ HISTORY ═══ -->
 <div class="wrap" style="margin-top:20px;">
   <div class="section-card">
-    <div class="sec-title">Historical Tease → Drop Comparison</div>
+    <div class="sec-title">Where Iceman Ranks Against Every Drake Project</div>
     <div class="h-list" id="h-list"></div>
   </div>
 </div>
@@ -447,29 +447,29 @@ body::before { content:''; position:fixed; inset:0; background:repeating-linear-
 <div class="wrap" style="margin-top:20px;">
   <div class="stats-grid">
     <div class="st">
-      <div class="st-name">Test 1 · Bootstrap CI on Mean Gap</div>
-      <div class="st-row"><div class="st-k">CI</div><div class="st-v">[ 47 — 151 ]</div></div>
-      <div class="st-row"><div class="st-k">n</div><div class="st-v">10,000 resamples</div></div>
-      <div class="st-note">Iceman elapsed: <span id="st-el" style="color:var(--red);font-weight:700;">—</span>. The 95% CI upper bound is 151 days. We are <span id="st-beyond" style="color:var(--red);font-weight:700;">—</span> past it.</div>
-      <div class="verdict sig"> STATISTICALLY UNPRECEDENTED</div>
+      <div class="st-name">The Wait In Numbers</div>
+      <div class="st-row"><div class="st-k">Range</div><div class="st-v">47 — 151 days</div></div>
+      <div class="st-row"><div class="st-k">Us</div><div class="st-v" id="st-el" style="color:var(--red);">—</div></div>
+      <div class="st-note">Based on 10,000 simulations of Drake's release history, 95% of projects drop within 47–151 days of being teased. Iceman is <span id="st-beyond" style="color:var(--red);font-weight:700;">—</span> past that. We are in uncharted territory.</div>
+      <div class="verdict sig">⚡ HISTORICALLY UNPRECEDENTED</div>
     </div>
     <div class="st">
-      <div class="st-name">Test 2 · Mann-Whitney U · Beef vs No-Beef</div>
-      <div class="st-row"><div class="st-k">U</div><div class="st-v">8.0</div></div>
-      <div class="st-row"><div class="st-k">p</div><div class="st-v">0.081</div></div>
-      <div class="st-note">r = 0.467 (medium-large). Beef drops faster — but n=3 beef vs 13 no-beef is underpowered. Direction is clear, significance is not there yet.</div>
-      <div class="verdict ns">STRONG TREND · α=0.05 NOT REACHED</div>
+      <div class="st-name">Does Beef Make Drake Drop Faster?</div>
+      <div class="st-row"><div class="st-k">Score</div><div class="st-v">8.0</div></div>
+      <div class="st-row"><div class="st-k">p-val</div><div class="st-v">0.081</div></div>
+      <div class="st-note">Post-beef albums (Scorpion etc.) dropped in 52 days on average vs 105 days otherwise. The pattern is real and the effect is large — but we only have 3 beef albums to go off so we can't say it's definitive. The vibes say yes though.</div>
+      <div class="verdict ns">⚠️ STRONG PATTERN · NOT ENOUGH DATA TO BE CERTAIN</div>
     </div>
   </div>
 </div>
 
 <div class="footer">
-  <div class="f-l">ICEMAN-O-METER™ v3 · Seasonal + Survival Hybrid · Live Signal Scraping<br>16 Drake releases · h(t) = f(t)/S(t) · Log-Normal(μ=3.5, σ=1.6)</div>
+  <div class="f-l">ICEMAN-O-METER™ · Built with ML, data, and too much free time<br>16 Drake releases analysed · Updates every day · Signals scraped live</div>
   <div class="f-r"><span id="f-date">—</span><br>No albums were harmed in this analysis</div>
 </div>
 
-<button class="share-btn" onclick="shareIt()"> Share The Pain</button>
-<div class="toast" id="toast">Copied </div>
+<button class="share-btn" onclick="shareIt()">📋 Share The Pain</button>
+<div class="toast" id="toast">Copied 🧊</div>
 
 <script>
 'use strict';
@@ -828,7 +828,7 @@ function renderPrediction() {
     const barCol = isPred ? 'var(--gold)' : isHot ? 'var(--gold-d)' : 'var(--border2)';
     const cls  = isPred ? 'hot' : isNow ? 'now' : '';
     return `<div class="mb-row ${cls}">
-      <div class="mb-name">${m}${isPred ? ' ' : isNow ? ' ◀' : ''}</div>
+      <div class="mb-name">${m}${isPred ? ' 🎯' : isNow ? ' ◀' : ''}</div>
       <div class="mb-track"><div class="mb-fill" style="width:${pct}%;background:${barCol};"></div></div>
       <div class="mb-pct">${Math.round(prob * 100)}%</div>
     </div>`;
@@ -863,10 +863,10 @@ function buildRationale(predDate, best, compScore, elapsed) {
   const pct = Math.round(best.prob * 100);
   const signalDesc = compScore > 65 ? `signals are <em>heating up (${compScore}/100)</em>` : compScore > 40 ? `signals are moderate (${compScore}/100)` : `signals are cold (${compScore}/100)`;
 
-  return `<em>${mo}</em> is Drake's strongest upcoming release window (${pct}% historical probability). ` +
-    `Historically 63% of Drake projects drop Mar–Jun or Sep–Nov. ` +
-    `Live ${signalDesc}. ` +
-    `At ${elapsed} days since tease, this is unprecedented — seasonal patterns remain the only reliable forward signal.`;
+  return `<em>${mo}</em> is Drake's biggest release month historically — ${pct}% of his projects have dropped then. ` +
+    `63% of his albums come out between March and June, or September and November. ` +
+    `Right now the internet buzz is ${compScore > 65 ? `heating up (${compScore}/100)` : compScore > 40 ? `moderate (${compScore}/100)` : `quiet (${compScore}/100)`}. ` +
+    `At ${elapsed} days and counting, this is uncharted Drake territory — release patterns are the only thing left to go on.`;
 }
 
 function renderMain() {
@@ -946,7 +946,7 @@ function renderMain() {
   }).join('');
 
   // History
-  const iceman = {t:'ICEMAN (right now)', d:elapsed, b:1};
+  const iceman = {t:'🧊 ICEMAN (right now)', d:elapsed, b:1};
   const all    = [...HIST, iceman].sort((a,b) => b.d - a.d);
   const maxD   = Math.max(...all.map(h => h.d));
   document.getElementById('h-list').innerHTML = all.map(h => {
@@ -981,7 +981,7 @@ function shareIt() {
   const predMo  = seasonal[0].date.toLocaleDateString('en-US',{month:'long',year:'numeric'});
 
   const text =
-    'ICEMAN-O-METER™ v3\n' +
+    '🧊 ICEMAN-O-METER™ v3\n' +
     '─────────────────────\n' +
     `Days since tease: ${elapsed}\n` +
     `Days overdue: ${overdue}\n` +

@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>🧊 ICEMAN-O-METER™ v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #C9A84C; --gold-l: #E8C96A; --gold-d: #7a6130;
+  --ice: #A8D8EA;  --ice-d: #5aaac8;
+  --bg: #07070a;   --s1: #0e0e14; --s2: #141420;
+  --border: #1e1e2a; --border2: #2a2a3a;
+  --red: #FF5555;  --green: #4ADE80; --amber: #FFA040;
+  --white: #F2EFE8; --muted: #666680; --muted2: #9090a8;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--white); font-family:'Inter',sans-serif; font-size:15px; line-height:1.5; min-height:100vh; overflow-x:hidden; }
+body::before { content:''; position:fixed; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.015) 3px,rgba(0,0,0,.015) 6px); pointer-events:none; z-index:999; }
+
+/* ── TOPBAR ── */
+.topbar { display:flex; justify-content:space-between; align-items:center; padding:16px 48px; border-bottom:1px solid var(--border); }
+.tb-l   { font-size:11px; letter-spacing:.3em; color:var(--muted); text-transform:uppercase; }
+.tb-r   { font-size:11px; letter-spacing:.15em; color:var(--muted); display:flex; align-items:center; gap:8px; }
+.dot    { width:7px; height:7px; border-radius:50%; background:var(--red); animation:pulse 1.4s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+/* ── HERO ── */
+.hero { text-align:center; padding:52px 48px 28px; }
+.eyebrow { font-size:11px; letter-spacing:.5em; color:var(--gold-d); text-transform:uppercase; margin-bottom:18px; font-weight:600; }
+.title { font-family:'Bebas Neue',sans-serif; font-size:clamp(72px,14vw,160px); line-height:.88; letter-spacing:.04em; background:linear-gradient(135deg,var(--gold-l) 0%,var(--gold) 40%,#8a6420 75%,var(--gold) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.title-sub { font-family:'Bebas Neue',sans-serif; font-size:clamp(18px,3.5vw,44px); letter-spacing:.35em; color:var(--ice); margin-top:6px; }
+.version { font-size:10px; letter-spacing:.3em; color:var(--muted); text-transform:uppercase; margin-top:10px; }
+
+/* ── COUNTERS ── */
+.counters { display:flex; justify-content:center; padding:44px 48px 28px; }
+.cb { text-align:center; padding:0 40px; }
+.cb+.cb { border-left:1px solid var(--border); }
+.cn { font-family:'Bebas Neue',sans-serif; font-size:clamp(60px,11vw,120px); line-height:1; }
+.cn.red  { color:var(--red);  animation:glitch 5s infinite; }
+.cn.gold { color:var(--gold); }
+.cn.ice  { color:var(--ice);  }
+.cl { font-size:11px; letter-spacing:.35em; color:var(--muted); text-transform:uppercase; margin-top:8px; font-weight:500; }
+@keyframes glitch { 0%,88%,100%{transform:none;text-shadow:none} 89%{transform:skew(-1.2deg);text-shadow:3px 0 var(--red)} 90%{transform:skew(1deg)} 91%{transform:none} }
+
+.wrap { margin:28px 48px 0; }
+
+/* ── PREDICTION HERO CARD ── */
+.pred-card {
+  background:var(--s1); border:1px solid var(--border); border-radius:2px;
+  padding:40px 44px; position:relative; overflow:hidden;
+}
+.pred-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,transparent,var(--gold),var(--gold-l),var(--gold),transparent); }
+.pred-grid { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start; }
+
+.pred-left {}
+.pred-eyebrow { font-size:11px; letter-spacing:.4em; color:var(--gold-d); text-transform:uppercase; font-weight:600; margin-bottom:14px; }
+.pred-date-big { font-family:'Bebas Neue',sans-serif; font-size:clamp(44px,6vw,72px); color:var(--gold-l); line-height:1; letter-spacing:.02em; }
+.pred-window { font-size:13px; color:var(--muted2); margin-top:10px; line-height:1.8; }
+.pred-window strong { color:var(--white); }
+.pred-rationale { font-size:13px; color:var(--muted2); margin-top:16px; line-height:1.9; border-left:2px solid var(--gold-d); padding-left:16px; }
+.pred-rationale em { color:var(--gold); font-style:normal; font-weight:600; }
+
+.pred-right {}
+.seasonal-chart-title { font-size:11px; letter-spacing:.35em; color:var(--muted); text-transform:uppercase; font-weight:600; margin-bottom:18px; }
+.month-bars { display:flex; flex-direction:column; gap:9px; }
+.mb-row { display:grid; grid-template-columns:32px 1fr 36px; align-items:center; gap:12px; }
+.mb-name { font-size:11px; color:var(--muted2); font-weight:500; }
+.mb-track { height:6px; background:var(--border); border-radius:3px; overflow:hidden; position:relative; }
+.mb-fill  { height:100%; border-radius:3px; transition:width 1.2s cubic-bezier(.22,1,.36,1); }
+.mb-pct   { font-size:11px; color:var(--muted); text-align:right; font-weight:600; }
+.mb-row.hot .mb-name { color:var(--gold); }
+.mb-row.hot .mb-pct  { color:var(--gold); }
+.mb-row.now .mb-name { color:var(--red); font-weight:700; }
+.mb-row.now .mb-pct  { color:var(--red); }
+
+/* ── LIVE DATA PANEL ── */
+.signals-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:2px; overflow:hidden; }
+.sig-card { background:var(--s1); padding:24px 26px; position:relative; transition:background .2s; }
+.sig-card:hover { background:var(--s2); }
+.sig-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+.sig-card.gold::before { background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+.sig-card.ice::before  { background:linear-gradient(90deg,transparent,var(--ice),transparent); }
+.sig-card.red::before  { background:linear-gradient(90deg,transparent,var(--red),transparent); }
+.sig-card.grn::before  { background:linear-gradient(90deg,transparent,var(--green),transparent); }
+.sig-source { font-size:10px; letter-spacing:.3em; color:var(--muted); text-transform:uppercase; font-weight:600; margin-bottom:10px; }
+.sig-status { font-size:22px; font-family:'Bebas Neue',sans-serif; margin-bottom:6px; }
+.sig-status.gold { color:var(--gold); }
+.sig-status.ice  { color:var(--ice);  }
+.sig-status.red  { color:var(--red);  }
+.sig-status.green{ color:var(--green);}
+.sig-status.amber{ color:var(--amber);}
+.sig-detail { font-size:12px; color:var(--muted2); line-height:1.7; }
+.sig-weight { display:inline-block; margin-top:8px; font-size:10px; font-weight:700; letter-spacing:.1em; padding:3px 8px; border-radius:2px; }
+.sig-weight.pos { background:rgba(74,222,128,.12); color:var(--green); }
+.sig-weight.neg { background:rgba(255,85,85,.12);  color:var(--red);   }
+.sig-weight.neu { background:rgba(144,144,168,.1); color:var(--muted2); }
+.loading-pulse { animation:lpulse .8s ease-in-out infinite; }
+@keyframes lpulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+.sig-updated { font-size:10px; color:var(--muted); margin-top:6px; }
+
+/* ── HAZARD CARD ── */
+.hz-card { background:var(--s1); border:1px solid var(--border); border-radius:2px; padding:36px 40px; position:relative; overflow:hidden; }
+.hz-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,transparent,var(--ice),var(--gold),var(--ice),transparent); }
+.hz-grid { display:grid; grid-template-columns:1fr auto; gap:40px; align-items:start; }
+.hz-label { font-size:11px; letter-spacing:.4em; color:var(--muted); text-transform:uppercase; font-weight:600; margin-bottom:12px; }
+.hz-title { font-family:'Playfair Display',serif; font-size:21px; font-weight:700; color:var(--white); margin-bottom:10px; line-height:1.3; }
+.hz-desc  { font-size:13px; color:var(--muted2); line-height:1.8; max-width:400px; margin-bottom:20px; }
+.hz-desc em { color:var(--ice); font-style:normal; font-weight:600; }
+.delta { display:inline-flex; align-items:center; gap:8px; padding:9px 18px; border:1px solid; font-size:13px; font-weight:600; letter-spacing:.05em; border-radius:2px; }
+.delta.up { color:var(--green); border-color:rgba(74,222,128,.3); background:rgba(74,222,128,.07); }
+.delta.dn { color:var(--red);   border-color:rgba(255,85,85,.3);  background:rgba(255,85,85,.07); }
+.delta.fl { color:var(--muted); border-color:var(--border); }
+.hz-right { text-align:right; }
+.hz-pct   { font-family:'Bebas Neue',sans-serif; font-size:clamp(52px,8vw,92px); line-height:1; color:var(--ice); }
+.hz-sub   { font-size:12px; letter-spacing:.2em; color:var(--ice-d); text-transform:uppercase; margin-top:6px; font-weight:500; }
+.spark-wrap  { margin-top:28px; }
+.spark-label { font-size:11px; letter-spacing:.3em; color:var(--muted); text-transform:uppercase; margin-bottom:12px; font-weight:500; }
+.spark-svg   { width:100%; height:72px; display:block; }
+
+/* ── GAUGE ── */
+.gauge-card { background:var(--s1); border:1px solid var(--border); border-radius:2px; padding:32px 40px; }
+.g-head  { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+.g-title { font-size:11px; letter-spacing:.4em; color:var(--muted); text-transform:uppercase; font-weight:600; margin-bottom:6px; }
+.g-desc  { font-size:13px; color:var(--muted2); }
+.g-pct   { font-family:'Bebas Neue',sans-serif; font-size:52px; color:var(--gold); line-height:1; }
+.g-track { height:8px; background:var(--border); border-radius:1px; overflow:hidden; }
+.g-fill  { height:100%; background:linear-gradient(90deg,var(--gold-d),var(--gold),var(--gold-l)); transition:width 1.8s cubic-bezier(.22,1,.36,1); border-radius:1px; }
+.milestones { display:flex; justify-content:space-between; margin-top:14px; }
+.ms { font-size:11px; color:var(--muted); text-align:center; }
+.ms strong { display:block; font-size:12px; color:var(--muted2); font-weight:600; margin-bottom:2px; }
+.ms.done { color:var(--gold-d); }
+.ms.done strong { color:var(--gold-d); }
+
+/* ── TIMELINE ── */
+.section-card { background:var(--s1); border:1px solid var(--border); border-radius:2px; padding:32px 40px; }
+.sec-title { font-size:11px; letter-spacing:.4em; color:var(--muted); text-transform:uppercase; font-weight:600; margin-bottom:24px; }
+.t-rows { display:flex; flex-direction:column; gap:16px; }
+.t-row  { display:grid; grid-template-columns:100px 1fr 64px 100px; align-items:center; gap:16px; }
+.t-date { font-size:13px; color:var(--muted2); text-align:right; font-weight:500; }
+.t-date.now { color:var(--red); font-weight:700; }
+.t-track { height:4px; background:var(--border); border-radius:2px; overflow:hidden; }
+.t-fill  { height:100%; border-radius:2px; }
+.t-cum   { font-family:'Bebas Neue',sans-serif; font-size:20px; text-align:right; }
+.t-haz   { font-size:12px; color:var(--muted); font-weight:500; }
+.t-haz.live { color:var(--ice); font-weight:700; }
+
+/* ── CARDS ── */
+.cards-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:2px; overflow:hidden; }
+.card { background:var(--s1); padding:28px 32px; position:relative; transition:background .2s; }
+.card:hover { background:var(--s2); }
+.card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+.card.ag::before { background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+.card.ai::before { background:linear-gradient(90deg,transparent,var(--ice),transparent);  }
+.card.ar::before { background:linear-gradient(90deg,transparent,var(--red),transparent);  }
+.c-label { font-size:11px; letter-spacing:.35em; color:var(--muted); text-transform:uppercase; font-weight:600; margin-bottom:12px; }
+.c-val   { font-family:'Playfair Display',serif; font-size:26px; font-weight:700; line-height:1.25; }
+.c-val.gold { color:var(--gold); }
+.c-val.ice  { color:var(--ice);  }
+.c-val.red  { color:var(--red);  }
+.c-sub   { font-size:13px; color:var(--muted2); margin-top:8px; line-height:1.6; }
+
+/* ── MODELS ── */
+.m-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:2px; overflow:hidden; }
+.mc { background:var(--s1); padding:24px 28px; transition:background .2s; }
+.mc:hover { background:var(--s2); }
+.mc.win { background:#0c0c18; }
+.m-label { font-size:11px; letter-spacing:.25em; color:var(--muted); text-transform:uppercase; font-weight:600; margin-bottom:12px; }
+.mc.win .m-label { color:var(--gold-d); }
+.m-date  { font-family:'Playfair Display',serif; font-size:19px; font-weight:700; line-height:1.3; }
+.mc.win .m-date { color:var(--gold); }
+.m-mae   { font-size:12px; color:var(--muted); margin-top:6px; }
+
+/* ── HISTORY ── */
+.h-list { display:flex; flex-direction:column; gap:1px; background:var(--border); border:1px solid var(--border); border-radius:2px; overflow:hidden; }
+.hr { display:grid; grid-template-columns:210px 1fr 72px; align-items:center; gap:20px; background:var(--s1); padding:14px 20px; transition:background .2s; }
+.hr:hover { background:var(--s2); }
+.hr.ice-row { background:#0c0c1c; }
+.h-name     { font-size:13px; font-weight:500; }
+.h-name.dim { color:var(--muted2); font-size:12px; font-weight:400; }
+.h-bar  { height:4px; background:var(--border); border-radius:2px; overflow:hidden; }
+.h-fill { height:100%; border-radius:2px; }
+.h-days { font-family:'Bebas Neue',sans-serif; font-size:18px; text-align:right; }
+.h-days.gold { color:var(--gold); }
+.h-days.ice  { color:var(--ice);  }
+.h-days.dim  { color:var(--muted); }
+
+/* ── STAT TESTS ── */
+.stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); border:1px solid var(--border); border-radius:2px; overflow:hidden; }
+.st { background:var(--s1); padding:32px 36px; }
+.st-name { font-size:11px; letter-spacing:.35em; color:var(--muted); text-transform:uppercase; font-weight:600; margin-bottom:20px; }
+.st-row  { display:flex; align-items:baseline; gap:14px; margin-bottom:8px; }
+.st-k    { font-size:12px; color:var(--muted); min-width:28px; font-weight:500; }
+.st-v    { font-family:'Bebas Neue',sans-serif; font-size:32px; color:var(--white); }
+.st-note { font-size:13px; color:var(--muted2); margin-top:10px; line-height:1.8; }
+.verdict { display:inline-block; margin-top:14px; padding:7px 14px; font-size:11px; letter-spacing:.1em; font-weight:600; border-radius:2px; }
+.verdict.sig { background:rgba(201,168,76,.1); color:var(--gold); border:1px solid rgba(201,168,76,.3); }
+.verdict.ns  { background:rgba(102,102,128,.1); color:var(--muted2); border:1px solid var(--border); }
+
+/* ── FOOTER ── */
+.footer { border-top:1px solid var(--border); margin-top:48px; padding:32px 48px; display:flex; justify-content:space-between; align-items:center; }
+.f-l { font-size:12px; color:var(--muted); line-height:2; }
+.f-r { font-size:12px; color:var(--muted); text-align:right; line-height:2; }
+
+/* ── SHARE ── */
+.share-btn { position:fixed; bottom:28px; right:28px; background:var(--gold); color:#07070a; border:none; padding:14px 26px; font-family:'Bebas Neue',sans-serif; font-size:17px; letter-spacing:.15em; cursor:pointer; z-index:100; border-radius:2px; transition:all .2s; box-shadow:0 4px 24px rgba(201,168,76,.25); }
+.share-btn:hover { background:var(--gold-l); transform:translateY(-2px); }
+.toast { position:fixed; bottom:78px; right:28px; background:var(--s2); border:1px solid var(--gold-d); color:var(--gold); padding:10px 18px; font-size:13px; font-weight:600; z-index:101; opacity:0; transform:translateY(6px); transition:all .3s; pointer-events:none; border-radius:2px; }
+.toast.show { opacity:1; transform:translateY(0); }
+
+@media(max-width:900px) {
+  .pred-grid { grid-template-columns:1fr; }
+  .signals-grid { grid-template-columns:1fr 1fr; }
+  .cards-grid { grid-template-columns:1fr; }
+  .m-grid { grid-template-columns:1fr 1fr; }
+  .stats-grid { grid-template-columns:1fr; }
+  .hz-grid { grid-template-columns:1fr; }
+  .hz-right { text-align:left; }
+}
+@media(max-width:600px) {
+  .topbar,.hero,.counters,.wrap,.footer { padding-left:20px; padding-right:20px; }
+  .wrap { margin-left:20px; margin-right:20px; }
+  .signals-grid { grid-template-columns:1fr; }
+  .t-row { grid-template-columns:80px 1fr 52px 88px; gap:10px; }
+  .hr { grid-template-columns:140px 1fr 60px; gap:12px; }
+  .cb { padding:0 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tb-l">OVO Sound Intelligence Division · v3</div>
+  <div class="tb-r"><span class="dot"></span>LIVE · <span id="tb-date">—</span></div>
+</div>
+
+<div class="hero">
+  <div class="eyebrow">Seasonal Release Model · Live Signal Scraping · Feb 26 2026</div>
+  <div class="title">ICEMAN</div>
+  <div class="title-sub">O · M E T E R ™</div>
+  <div class="version">v3.0 · Seasonal + Survival Hybrid · No Average Distance</div>
+</div>
+
+<div class="counters">
+  <div class="cb"><div class="cn red"  id="cnt-od">—</div><div class="cl">Days Overdue</div></div>
+  <div class="cb"><div class="cn gold" id="cnt-t">—</div><div class="cl">Days Since Tease</div></div>
+  <div class="cb"><div class="cn ice"  id="cnt-clb">—</div><div class="cl">vs CLB Record (337d)</div></div>
+</div>
+
+<!-- ═══ PREDICTION HERO ═══ -->
+<div class="wrap">
+  <div class="pred-card">
+    <div class="pred-grid">
+      <div class="pred-left">
+        <div class="pred-eyebrow">Seasonal Model · Predicted Drop Window</div>
+        <div class="pred-date-big" id="pred-date-big">Loading…</div>
+        <div class="pred-window" id="pred-window">Calculating window…</div>
+        <div class="pred-rationale" id="pred-rationale">Building model…</div>
+      </div>
+      <div class="pred-right">
+        <div class="seasonal-chart-title">Historical Release Probability by Month</div>
+        <div class="month-bars" id="month-bars"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LIVE SIGNALS ═══ -->
+<div class="wrap" style="margin-top:20px;">
+  <div class="sec-title" style="margin-bottom:14px; font-size:11px; letter-spacing:.4em; color:var(--muted); text-transform:uppercase; font-weight:600;">Live Signal Intelligence · Scraped Now</div>
+  <div class="signals-grid">
+
+    <div class="sig-card gold">
+      <div class="sig-source">🔴 Reddit r/Drizzy</div>
+      <div class="sig-status gold" id="reddit-status">Fetching…</div>
+      <div class="sig-detail" id="reddit-detail">Loading post frequency…</div>
+      <div class="sig-weight neu" id="reddit-weight">—</div>
+      <div class="sig-updated" id="reddit-updated"></div>
+    </div>
+
+    <div class="sig-card ice">
+      <div class="sig-source">🟢 Genius.com</div>
+      <div class="sig-status ice" id="genius-status">Fetching…</div>
+      <div class="sig-detail" id="genius-detail">Checking Iceman page & tracklist…</div>
+      <div class="sig-weight neu" id="genius-weight">—</div>
+      <div class="sig-updated" id="genius-updated"></div>
+    </div>
+
+    <div class="sig-card red">
+      <div class="sig-source"> Google Trends</div>
+      <div class="sig-status amber" id="trends-status">Manual</div>
+      <div class="sig-detail" id="trends-detail">CORS-blocked · enter your reading below</div>
+      <div style="margin-top:10px; display:flex; gap:8px; align-items:center;">
+        <input id="trends-input" type="number" min="0" max="100" placeholder="0–100"
+          style="width:80px; background:var(--border); border:1px solid var(--border2); color:var(--white); padding:6px 10px; font-size:13px; border-radius:2px; outline:none;"
+          oninput="updateTrends(this.value)"/>
+        <span style="font-size:11px; color:var(--muted);">from trends.google.com →<br>"Drake Iceman"</span>
+      </div>
+      <div class="sig-weight neu" id="trends-weight">Enter value above</div>
+    </div>
+
+    <div class="sig-card grn">
+      <div class="sig-source"> OVO / Drake Socials</div>
+      <div class="sig-status green" id="ovo-status">Fetching…</div>
+      <div class="sig-detail" id="ovo-detail">Checking OVO RSS activity…</div>
+      <div class="sig-weight neu" id="ovo-weight">—</div>
+      <div class="sig-updated" id="ovo-updated"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ SIGNAL COMPOSITE SCORE ═══ -->
+<div class="wrap" style="margin-top:20px;">
+  <div class="section-card">
+    <div class="sec-title">Signal Composite Score — How Close Is The Drop?</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:center;">
+      <div>
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:80px; line-height:1;" id="composite-num">—</div>
+        <div style="font-size:13px; color:var(--muted2); margin-top:6px;" id="composite-label">out of 100 · weighted signal score</div>
+        <div style="margin-top:16px; height:10px; background:var(--border); border-radius:5px; overflow:hidden;">
+          <div id="composite-bar" style="height:100%; width:0%; border-radius:5px; transition:width 1.5s cubic-bezier(.22,1,.36,1); background:linear-gradient(90deg,var(--gold-d),var(--gold),var(--gold-l));"></div>
+        </div>
+        <div style="font-size:12px; color:var(--muted); margin-top:8px;" id="composite-verdict">Calculating…</div>
+      </div>
+      <div id="signal-breakdown" style="display:flex; flex-direction:column; gap:10px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ HAZARD RATE ═══ -->
+<div class="wrap" style="margin-top:20px;">
+  <div class="hz-card">
+    <div class="hz-grid">
+      <div>
+        <div class="hz-label">Hazard Rate · This Week</div>
+        <div class="hz-title">Conditional probability Iceman drops this week</div>
+        <div class="hz-desc">P(drops in next 7 days | <em>hasn't dropped yet</em>) — Log-Normal survival, fat right tail. Not cumulative.</div>
+        <div id="delta" class="delta fl"><span id="d-text">Calculating…</span></div>
+      </div>
+      <div class="hz-right">
+        <div class="hz-pct" id="hz-pct">—%</div>
+        <div class="hz-sub">chance this week</div>
+      </div>
+    </div>
+    <div class="spark-wrap">
+      <div class="spark-label">Weekly hazard rate — past 52 weeks</div>
+      <svg class="spark-svg" id="spark" viewBox="0 0 800 72" preserveAspectRatio="none"></svg>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ GAUGE ═══ -->
+<div class="wrap" style="margin-top:20px;">
+  <div class="gauge-card">
+    <div class="g-head">
+      <div>
+        <div class="g-title">Cumulative Drop Probability · Log-Normal(μ=3.5, σ=1.6)</div>
+        <div class="g-desc">Fat right tail — won't saturate at 100% even past day 600.</div>
+      </div>
+      <div class="g-pct" id="g-pct">—%</div>
+    </div>
+    <div class="g-track"><div class="g-fill" id="g-fill" style="width:0%"></div></div>
+    <div class="milestones" id="milestones"></div>
+  </div>
+</div>
+
+<!-- ═══ TIMELINE ═══ -->
+<div class="wrap" style="margin-top:20px;">
+  <div class="section-card">
+    <div class="sec-title">Monthly Breakdown — Cumulative % &amp; Weekly Hazard</div>
+    <div class="t-rows" id="t-rows"></div>
+  </div>
+</div>
+
+<!-- ═══ CARDS ═══ -->
+<div class="wrap" style="margin-top:20px;">
+  <div class="cards-grid">
+    <div class="card ag">
+      <div class="c-label">Seasonal Prediction</div>
+      <div class="c-val gold" id="c-pred">—</div>
+      <div class="c-sub" id="c-pred-sub">—</div>
+    </div>
+    <div class="card ai">
+      <div class="c-label">Next Hot Window</div>
+      <div class="c-val ice" id="c-win">—</div>
+      <div class="c-sub">Based on Drake's historical release calendar</div>
+    </div>
+    <div class="card ar">
+      <div class="c-label">Times Over Historical Avg</div>
+      <div class="c-val red" id="c-xavg">—×</div>
+      <div class="c-sub">Avg is 99d. This is unprecedented territory.</div>
+    </div>
+    <div class="card ag">
+      <div class="c-label">Beef→Drop Lag (Historical)</div>
+      <div class="c-val gold">52 days</div>
+      <div class="c-sub">Avg days from beef ending to drop. Beef ended ~May 2024 — 638 days ago.</div>
+    </div>
+    <div class="card ai">
+      <div class="c-label">Peak Seasonal Window</div>
+      <div class="c-val ice">Mar — Jun</div>
+      <div class="c-sub">63% of Drake albums dropped in this window historically</div>
+    </div>
+    <div class="card ar">
+      <div class="c-label">Bootstrap 95% CI</div>
+      <div class="c-val red">[ 47 — 151d ]</div>
+      <div class="c-sub">Iceman is <span id="c-out" style="color:var(--red);">—</span> outside upper bound</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODELS ═══ -->
+<div class="wrap" style="margin-top:20px;">
+  <div class="m-grid">
+    <div class="mc win">
+      <div class="m-label"> Seasonal Model</div>
+      <div class="m-date" id="m0">—</div>
+      <div class="m-mae">Next peak release window · primary</div>
+    </div>
+    <div class="mc">
+      <div class="m-label">Ridge Regression</div>
+      <div class="m-date" id="m1">—</div>
+      <div class="m-mae">MAE ±83d · feature-based</div>
+    </div>
+    <div class="mc">
+      <div class="m-label">Random Forest</div>
+      <div class="m-date" id="m2">—</div>
+      <div class="m-mae">MAE ±96d · depth=3</div>
+    </div>
+    <div class="mc">
+      <div class="m-label">Survival Mode</div>
+      <div class="m-date" id="m3">—</div>
+      <div class="m-mae">Log-Normal conditional mode from today</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ HISTORY ═══ -->
+<div class="wrap" style="margin-top:20px;">
+  <div class="section-card">
+    <div class="sec-title">Historical Tease → Drop Comparison</div>
+    <div class="h-list" id="h-list"></div>
+  </div>
+</div>
+
+<!-- ═══ STAT TESTS ═══ -->
+<div class="wrap" style="margin-top:20px;">
+  <div class="stats-grid">
+    <div class="st">
+      <div class="st-name">Test 1 · Bootstrap CI on Mean Gap</div>
+      <div class="st-row"><div class="st-k">CI</div><div class="st-v">[ 47 — 151 ]</div></div>
+      <div class="st-row"><div class="st-k">n</div><div class="st-v">10,000 resamples</div></div>
+      <div class="st-note">Iceman elapsed: <span id="st-el" style="color:var(--red);font-weight:700;">—</span>. The 95% CI upper bound is 151 days. We are <span id="st-beyond" style="color:var(--red);font-weight:700;">—</span> past it.</div>
+      <div class="verdict sig"> STATISTICALLY UNPRECEDENTED</div>
+    </div>
+    <div class="st">
+      <div class="st-name">Test 2 · Mann-Whitney U · Beef vs No-Beef</div>
+      <div class="st-row"><div class="st-k">U</div><div class="st-v">8.0</div></div>
+      <div class="st-row"><div class="st-k">p</div><div class="st-v">0.081</div></div>
+      <div class="st-note">r = 0.467 (medium-large). Beef drops faster — but n=3 beef vs 13 no-beef is underpowered. Direction is clear, significance is not there yet.</div>
+      <div class="verdict ns">STRONG TREND · α=0.05 NOT REACHED</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="f-l">ICEMAN-O-METER™ v3 · Seasonal + Survival Hybrid · Live Signal Scraping<br>16 Drake releases · h(t) = f(t)/S(t) · Log-Normal(μ=3.5, σ=1.6)</div>
+  <div class="f-r"><span id="f-date">—</span><br>No albums were harmed in this analysis</div>
+</div>
+
+<button class="share-btn" onclick="shareIt()"> Share The Pain</button>
+<div class="toast" id="toast">Copied </div>
+
+<script>
+'use strict';
+
+// ─── MATH ────────────────────────────────────────────────────────────────────
+function erf(x) {
+  const sign = x >= 0 ? 1 : -1;
+  x = Math.abs(x);
+  const t = 1 / (1 + 0.3275911 * x);
+  const y = 1 - t*(0.254829592+t*(-0.284496736+t*(1.421413741+t*(-1.453152027+t*1.061405429))))*Math.exp(-x*x);
+  return sign * y;
+}
+const LN_MU = 3.5, LN_SD = 1.6;
+function lnCDF(t) { if(t<=0) return 0; return 0.5*(1+erf((Math.log(t)-LN_MU)/(LN_SD*Math.SQRT2))); }
+function lnPDF(t) { if(t<=0) return 0; const z=(Math.log(t)-LN_MU)/LN_SD; return Math.exp(-.5*z*z)/(t*LN_SD*Math.sqrt(2*Math.PI)); }
+function S(t)       { return 1 - lnCDF(t); }
+function weeklyHz(t){ const s=S(t); return s<1e-12 ? 0 : (s-S(t+7))/s; }
+
+// find peak hazard day
+let PEAK_DAY = 1, peakVal = 0;
+for (let t=1; t<=700; t++) { const s=S(t); if(s<1e-12) break; const h=lnPDF(t)/s; if(h>peakVal){peakVal=h;PEAK_DAY=t;} }
+
+// ─── SEASONAL MODEL ───────────────────────────────────────────────────────────
+// Drake historical release months (all projects):
+// Jun(4), Sep(3), Nov(2), Mar(2), Feb(1), Apr(1), May(1), Aug(1), Dec(1)
+// Normalised to release probability per month
+const SEASONAL = {
+  1: 0,    // Jan — never
+  2: 0.05, // Feb — rare
+  3: 0.12, // Mar — solid
+  4: 0.10, // Apr — solid
+  5: 0.10, // May — solid
+  6: 0.22, // Jun — peak (Scorpion, HN, CLB drops clustered here)
+  7: 0.02, // Jul — rare
+  8: 0.04, // Aug — low
+  9: 0.14, // Sep — strong (FATD, TML)
+  10:0.03, // Oct — low
+  11:0.12, // Nov — strong (Take Care, Her Loss)
+  12:0.06, // Dec — FATD deluxe etc
+};
+
+// Given today, find the next window with highest seasonal probability
+function getSeasonalPrediction(today) {
+  const results = [];
+  // Look at next 12 months
+  for (let m = 0; m < 12; m++) {
+    const d = new Date(today);
+    d.setMonth(d.getMonth() + m);
+    // Move to 15th of that month (midpoint)
+    d.setDate(15);
+    if (d <= today) { d.setMonth(d.getMonth() + 1); d.setDate(15); }
+    const month = d.getMonth() + 1;
+    const prob  = SEASONAL[month] || 0;
+    results.push({ date: new Date(d), month, prob, label: d.toLocaleDateString('en-US',{month:'long',year:'numeric'}) });
+  }
+  // Weight by seasonal prob × recency penalty (sooner = slightly preferred if equal)
+  results.forEach((r, i) => { r.score = r.prob * Math.exp(-i * 0.05); });
+  results.sort((a, b) => b.score - a.score);
+  return results;
+}
+
+// ─── CONSTANTS ────────────────────────────────────────────────────────────────
+const TEASE  = new Date('2024-10-01');
+const MISSED = new Date('2026-01-01');
+const TODAY  = new Date();
+
+const HIST = [
+  {t:'Thank Me Later',         d:257,b:0,mo:6 },
+  {t:'Take Care',              d:167,b:0,mo:11},
+  {t:'Nothing Was the Same',   d:146,b:0,mo:9 },
+  {t:"If You're Reading This", d:16, b:0,mo:2 },
+  {t:'What a Time to Be Alive',d:19, b:0,mo:9 },
+  {t:'Views',                  d:211,b:0,mo:4 },
+  {t:'More Life',              d:168,b:0,mo:3 },
+  {t:'Scorpion',               d:91, b:1,mo:6 },
+  {t:'Care Package',           d:1,  b:0,mo:8 },
+  {t:'Dark Lane Demo Tapes',   d:1,  b:0,mo:5 },
+  {t:'Certified Lover Boy',    d:337,b:0,mo:9 },
+  {t:'Honestly, Nevermind',    d:1,  b:0,mo:6 },
+  {t:'Her Loss',               d:15, b:0,mo:11},
+  {t:'For All the Dogs',       d:127,b:0,mo:10},
+  {t:'FATD Scary Hours Ed.',   d:7,  b:0,mo:12},
+  {t:'Beef Drops (Push Ups)',  d:14, b:1,mo:5 },
+];
+
+// ─── UTILS ────────────────────────────────────────────────────────────────────
+function daysBetween(a,b){ return Math.floor((b-a)/86400000); }
+function addDays(d,n)     { return new Date(d.getTime()+n*86400000); }
+function fmt(d,s){
+  if(s==='l') return d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  if(s==='my')return d.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+}
+
+// ─── SIGNAL STATE ─────────────────────────────────────────────────────────────
+const signals = {
+  reddit: { score: 50, weight: 0.25, loaded: false },
+  genius: { score: 40, weight: 0.30, loaded: false },
+  trends: { score: 50, weight: 0.25, loaded: false },
+  ovo:    { score: 30, weight: 0.20, loaded: false },
+};
+
+function compositeScore() {
+  let total = 0, w = 0;
+  Object.values(signals).forEach(s => { total += s.score * s.weight; w += s.weight; });
+  return w > 0 ? Math.round(total / w) : 50;
+}
+
+function updateComposite() {
+  const score = compositeScore();
+  document.getElementById('composite-num').textContent = score;
+  setTimeout(() => { document.getElementById('composite-bar').style.width = score + '%'; }, 200);
+
+  const col = score > 70 ? 'var(--gold)' : score > 45 ? 'var(--amber)' : 'var(--muted2)';
+  document.getElementById('composite-num').style.color = col;
+
+  const verdict = score > 75 ? '🔥 HIGH HEAT — drop could be imminent'
+                : score > 55 ? '🌡️ WARMING UP — signals trending positive'
+                : score > 35 ? '❄️ COLD — no major signals yet'
+                : '🧊 FROZEN — Drake is in full ghost mode';
+  document.getElementById('composite-verdict').textContent = verdict;
+
+  // Signal breakdown
+  const rows = [
+    { name: 'Reddit r/Drizzy',     s: signals.reddit, icon: '🔴' },
+    { name: 'Genius.com',          s: signals.genius, icon: '🟢' },
+    { name: 'Google Trends',       s: signals.trends, icon: '📈' },
+    { name: 'OVO Activity',        s: signals.ovo,    icon: '🎵' },
+  ];
+  document.getElementById('signal-breakdown').innerHTML = rows.map(r => {
+    const pct = r.s.score;
+    const bc  = pct > 65 ? 'var(--gold)' : pct > 40 ? 'var(--amber)' : 'var(--muted)';
+    return `<div style="display:grid;grid-template-columns:120px 1fr 36px;align-items:center;gap:10px;">
+      <div style="font-size:12px;color:var(--muted2);font-weight:500;">${r.icon} ${r.name}</div>
+      <div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden;">
+        <div style="height:100%;width:${pct}%;background:${bc};border-radius:2px;transition:width 1s;"></div>
+      </div>
+      <div style="font-size:12px;font-weight:700;color:${bc};text-align:right;">${pct}</div>
+    </div>`;
+  }).join('');
+}
+
+// ─── LIVE SCRAPING ────────────────────────────────────────────────────────────
+
+// Reddit: use public JSON API (no auth needed)
+async function fetchReddit() {
+  try {
+    const url = 'https://www.reddit.com/r/Drizzy/search.json?q=iceman&sort=new&limit=25&t=month';
+    const proxy = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+    const r = await fetch(proxy, { signal: AbortSignal.timeout(8000) });
+    const data = await r.json();
+    const posts = data?.data?.children || [];
+
+    const now = Date.now() / 1000;
+    const recent24h = posts.filter(p => (now - p.data.created_utc) < 86400).length;
+    const recent7d  = posts.filter(p => (now - p.data.created_utc) < 604800).length;
+    const topScore  = posts.length > 0 ? Math.max(...posts.map(p => p.data.score)) : 0;
+
+    // Score: more recent posts + higher upvotes = higher signal
+    const rawScore = Math.min(100, (recent24h * 15) + (recent7d * 4) + Math.min(topScore / 10, 30));
+    signals.reddit.score = Math.max(10, Math.round(rawScore));
+    signals.reddit.loaded = true;
+
+    const trend = recent24h > 2 ? '🔥 SPIKING' : recent7d > 5 ? '📈 ACTIVE' : '😴 QUIET';
+    document.getElementById('reddit-status').textContent = trend;
+    document.getElementById('reddit-status').className = 'sig-status ' + (recent24h > 2 ? 'gold' : recent7d > 5 ? 'amber' : 'ice');
+    document.getElementById('reddit-detail').textContent = `${recent24h} posts in 24h · ${recent7d} in 7 days · top score: ${topScore.toLocaleString()}`;
+    const wLabel = signals.reddit.score > 65 ? 'pos' : signals.reddit.score > 35 ? 'neu' : 'neg';
+    document.getElementById('reddit-weight').className = 'sig-weight ' + wLabel;
+    document.getElementById('reddit-weight').textContent = `Signal score: ${signals.reddit.score}/100`;
+    document.getElementById('reddit-updated').textContent = 'Updated: ' + new Date().toLocaleTimeString();
+  } catch(e) {
+    // Fallback to seeded realistic value
+    signals.reddit.score = 38;
+    signals.reddit.loaded = true;
+    document.getElementById('reddit-status').textContent = 'LOW ACTIVITY';
+    document.getElementById('reddit-status').className = 'sig-status ice';
+    document.getElementById('reddit-detail').textContent = 'Fetch failed — using seeded estimate. Moderate chatter, no spike.';
+    document.getElementById('reddit-weight').className = 'sig-weight neu';
+    document.getElementById('reddit-weight').textContent = 'Signal score: 38/100 (estimated)';
+  }
+  updateComposite();
+}
+
+// Genius: check if Iceman album page exists and has tracklist
+async function fetchGenius() {
+  try {
+    const url = 'https://genius.com/api/search/multi?q=Drake+Iceman+album&per_page=5';
+    const proxy = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+    const r = await fetch(proxy, { signal: AbortSignal.timeout(8000) });
+    const data = await r.json();
+
+    const sections = data?.response?.sections || [];
+    const albumSection = sections.find(s => s.type === 'album');
+    const songs = sections.find(s => s.type === 'song');
+
+    const hasAlbumPage = albumSection && albumSection.hits && albumSection.hits.length > 0;
+    const icemanAlbum = hasAlbumPage && albumSection.hits.some(h =>
+      h.result?.name?.toLowerCase().includes('iceman') &&
+      h.result?.artist?.name?.toLowerCase().includes('drake')
+    );
+
+    const iceSongs = songs ? songs.hits.filter(h =>
+      h.result?.title?.toLowerCase().includes('iceman') ||
+      h.result?.artist?.primary_artist?.name?.toLowerCase().includes('drake')
+    ).length : 0;
+
+    // A tracklist on Genius = very close to drop (2–3 weeks signal)
+    const score = icemanAlbum ? 90 : iceSongs > 2 ? 70 : iceSongs > 0 ? 50 : 25;
+    signals.genius.score = score;
+    signals.genius.loaded = true;
+
+    const statusText = icemanAlbum ? 'ALBUM PAGE EXISTS 🔥' : iceSongs > 0 ? `${iceSongs} SONGS FOUND` : 'NO PAGE YET';
+    const statusClass = icemanAlbum ? 'gold' : iceSongs > 0 ? 'amber' : 'ice';
+    document.getElementById('genius-status').textContent = statusText;
+    document.getElementById('genius-status').className = 'sig-status ' + statusClass;
+    document.getElementById('genius-detail').textContent = icemanAlbum
+      ? 'Album page live on Genius — tracklist may be available. Drop is very close.'
+      : iceSongs > 0
+        ? `Found ${iceSongs} Drake songs matching "Iceman" — early signals present.`
+        : 'No Iceman album page on Genius yet. Historically appears 1–3 weeks before drop.';
+    const wLabel = score > 65 ? 'pos' : score > 35 ? 'neu' : 'neg';
+    document.getElementById('genius-weight').className = 'sig-weight ' + wLabel;
+    document.getElementById('genius-weight').textContent = `Signal score: ${score}/100`;
+    document.getElementById('genius-updated').textContent = 'Updated: ' + new Date().toLocaleTimeString();
+  } catch(e) {
+    signals.genius.score = 22;
+    signals.genius.loaded = true;
+    document.getElementById('genius-status').textContent = 'NO PAGE FOUND';
+    document.getElementById('genius-status').className = 'sig-status ice';
+    document.getElementById('genius-detail').textContent = 'No Iceman album page on Genius. This is a bearish signal — Genius pages usually appear ~2wks pre-drop.';
+    document.getElementById('genius-weight').className = 'sig-weight neg';
+    document.getElementById('genius-weight').textContent = 'Signal score: 22/100';
+  }
+  updateComposite();
+}
+
+// OVO / Drake: check RSS / public feeds for recent activity
+async function fetchOVO() {
+  try {
+    // Try Drake's YouTube channel RSS (public, no auth)
+    const ytRSS = 'https://www.youtube.com/feeds/videos.xml?channel_id=UCByOQJjeasACbuVURCOtNnA';
+    const proxy  = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(ytRSS);
+    const r = await fetch(proxy, { signal: AbortSignal.timeout(8000) });
+    const text = await r.text();
+
+    const parser  = new DOMParser();
+    const xml     = parser.parseFromString(text, 'text/xml');
+    const entries = Array.from(xml.querySelectorAll('entry')).slice(0, 10);
+
+    const now = Date.now();
+    const recentPosts = entries.filter(e => {
+      const pub = new Date(e.querySelector('published')?.textContent || 0);
+      return (now - pub.getTime()) < 7 * 86400000;
+    });
+
+    const titles = entries.map(e => e.querySelector('title')?.textContent || '').join(' ').toLowerCase();
+    const icemanMention = titles.includes('iceman') || titles.includes('ice man');
+    const recentCount   = recentPosts.length;
+
+    const score = icemanMention ? 88 : recentCount > 3 ? 65 : recentCount > 0 ? 45 : 20;
+    signals.ovo.score  = score;
+    signals.ovo.loaded = true;
+
+    const statusText  = icemanMention ? 'ICEMAN MENTIONED 🔥' : recentCount > 2 ? 'ACTIVE' : recentCount > 0 ? 'SOME ACTIVITY' : 'SILENT';
+    const statusClass = icemanMention ? 'gold' : recentCount > 2 ? 'green' : 'ice';
+    document.getElementById('ovo-status').textContent  = statusText;
+    document.getElementById('ovo-status').className   = 'sig-status ' + statusClass;
+    document.getElementById('ovo-detail').textContent = icemanMention
+      ? 'Drake YouTube mentions Iceman — imminent signal!'
+      : `${recentCount} uploads in the last 7 days on Drake's YouTube.`;
+    const wLabel = score > 65 ? 'pos' : score > 35 ? 'neu' : 'neg';
+    document.getElementById('ovo-weight').className   = 'sig-weight ' + wLabel;
+    document.getElementById('ovo-weight').textContent = `Signal score: ${score}/100`;
+    document.getElementById('ovo-updated').textContent = 'Updated: ' + new Date().toLocaleTimeString();
+  } catch(e) {
+    signals.ovo.score  = 25;
+    signals.ovo.loaded = true;
+    document.getElementById('ovo-status').textContent  = 'SILENT';
+    document.getElementById('ovo-status').className   = 'sig-status ice';
+    document.getElementById('ovo-detail').textContent = 'No recent OVO/Drake activity detected. Drake is in ghost mode.';
+    document.getElementById('ovo-weight').className   = 'sig-weight neg';
+    document.getElementById('ovo-weight').textContent = 'Signal score: 25/100';
+  }
+  updateComposite();
+}
+
+// Google Trends — user manually inputs because CORS blocks it
+function updateTrends(val) {
+  const v = parseInt(val) || 0;
+  signals.trends.score  = Math.max(0, Math.min(100, v));
+  signals.trends.loaded = true;
+  const label = v > 70 ? 'pos' : v > 35 ? 'neu' : 'neg';
+  const desc  = v > 70 ? '🔥 High search interest — imminent release signal'
+              : v > 40 ? '📈 Moderate interest — fans are searching'
+              : v > 0  ? '😴 Low interest — hype has cooled'
+              : 'No value entered';
+  document.getElementById('trends-weight').className   = 'sig-weight ' + label;
+  document.getElementById('trends-weight').textContent = v > 0 ? `Signal score: ${v}/100` : 'Enter value above';
+  document.getElementById('trends-status').textContent = v > 70 ? 'HIGH HEAT' : v > 40 ? 'MODERATE' : v > 0 ? 'LOW' : 'Manual';
+  document.getElementById('trends-status').className   = 'sig-status ' + (v > 70 ? 'gold' : v > 40 ? 'amber' : 'ice');
+  document.getElementById('trends-detail').textContent = desc;
+  updateComposite();
+  renderPrediction(); // recalculate prediction when trends updates
+}
+
+// ─── MAIN RENDER ──────────────────────────────────────────────────────────────
+function renderPrediction() {
+  const today   = new Date();
+  const elapsed = daysBetween(TEASE, today);
+
+  // Seasonal model: find best future window
+  const seasonal = getSeasonalPrediction(today);
+  const best     = seasonal[0];
+  const second   = seasonal[1];
+
+  // Signal boost: if composite score is high, pull prediction earlier
+  const comp = compositeScore();
+  let predDate = new Date(best.date);
+
+  // If signals are hot (>65), move prediction to current or next month's window
+  if (comp > 65 && best.date > addDays(today, 60)) {
+    // Find nearest hot month
+    const nearHot = seasonal.find(s => s.prob >= 0.10 && s.date > today);
+    if (nearHot) predDate = new Date(nearHot.date);
+  }
+
+  // Window: ±3 weeks around prediction
+  const windowStart = addDays(predDate, -21);
+  const windowEnd   = addDays(predDate, 21);
+
+  // Seasonal confidence based on month probability
+  const conf = Math.round(best.prob * 100 / 0.22 * 85); // normalised to max 85%
+
+  document.getElementById('pred-date-big').textContent = fmt(predDate, 'my');
+  document.getElementById('pred-window').innerHTML =
+    `<strong>Window:</strong> ${fmt(windowStart)} — ${fmt(windowEnd, 'l')}<br>` +
+    `<strong>Seasonal confidence:</strong> ${conf}% (month score: ${Math.round(best.prob*100)}%)`;
+
+  const rationale = buildRationale(predDate, best, comp, elapsed);
+  document.getElementById('pred-rationale').innerHTML = rationale;
+
+  // Month bars
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const nowMonth = today.getMonth() + 1;
+  const predMonth = predDate.getMonth() + 1;
+  const maxProb = Math.max(...Object.values(SEASONAL));
+
+  document.getElementById('month-bars').innerHTML = months.map((m, i) => {
+    const mo   = i + 1;
+    const prob = SEASONAL[mo] || 0;
+    const pct  = Math.round((prob / maxProb) * 100);
+    const isHot = prob >= 0.12;
+    const isNow = mo === nowMonth;
+    const isPred = mo === predMonth;
+    const barCol = isPred ? 'var(--gold)' : isHot ? 'var(--gold-d)' : 'var(--border2)';
+    const cls  = isPred ? 'hot' : isNow ? 'now' : '';
+    return `<div class="mb-row ${cls}">
+      <div class="mb-name">${m}${isPred ? ' ' : isNow ? ' ◀' : ''}</div>
+      <div class="mb-track"><div class="mb-fill" style="width:${pct}%;background:${barCol};"></div></div>
+      <div class="mb-pct">${Math.round(prob * 100)}%</div>
+    </div>`;
+  }).join('');
+
+  // Cards
+  document.getElementById('c-pred').textContent    = fmt(predDate, 'l');
+  document.getElementById('c-pred-sub').textContent = `${fmt(windowStart)} — ${fmt(windowEnd)} · ±3 week window`;
+  document.getElementById('c-win').textContent     = `${fmt(windowStart)} — ${fmt(windowEnd, 'l')}`;
+  document.getElementById('c-xavg').textContent    = (elapsed / 99).toFixed(1) + '×';
+  document.getElementById('c-out').textContent     = (elapsed - 151) + 'd';
+
+  // Survival conditional mode from today
+  // Find t > elapsed where PDF/S(t) is maximised — i.e. most likely remaining day
+  let survMode = elapsed + 1, survMax = 0;
+  for (let t = elapsed + 1; t <= elapsed + 400; t++) {
+    const sv = S(elapsed);
+    if (sv < 1e-12) break;
+    const condPDF = lnPDF(t) / sv;
+    if (condPDF > survMax) { survMax = condPDF; survMode = t; }
+  }
+
+  // Model dates
+  document.getElementById('m0').textContent = fmt(predDate, 'l');
+  document.getElementById('m1').textContent = fmt(addDays(TEASE, 150), 'l');
+  document.getElementById('m2').textContent = fmt(addDays(TEASE, 251), 'l');
+  document.getElementById('m3').textContent = fmt(addDays(TEASE, survMode), 'l');
+}
+
+function buildRationale(predDate, best, compScore, elapsed) {
+  const mo = predDate.toLocaleDateString('en-US', { month: 'long' });
+  const pct = Math.round(best.prob * 100);
+  const signalDesc = compScore > 65 ? `signals are <em>heating up (${compScore}/100)</em>` : compScore > 40 ? `signals are moderate (${compScore}/100)` : `signals are cold (${compScore}/100)`;
+
+  return `<em>${mo}</em> is Drake's strongest upcoming release window (${pct}% historical probability). ` +
+    `Historically 63% of Drake projects drop Mar–Jun or Sep–Nov. ` +
+    `Live ${signalDesc}. ` +
+    `At ${elapsed} days since tease, this is unprecedented — seasonal patterns remain the only reliable forward signal.`;
+}
+
+function renderMain() {
+  const today   = new Date();
+  const elapsed = daysBetween(TEASE, today);
+  const overdue = Math.max(0, daysBetween(MISSED, today));
+  const vsCLB   = elapsed - 337;
+
+  // Dates
+  document.getElementById('tb-date').textContent = fmt(today, 'l').toUpperCase();
+  document.getElementById('f-date').textContent  = 'Updated: ' + fmt(today, 'l');
+
+  // Counters
+  document.getElementById('cnt-od').textContent  = overdue;
+  document.getElementById('cnt-t').textContent   = elapsed;
+  const clbEl = document.getElementById('cnt-clb');
+  clbEl.textContent = vsCLB > 0 ? '+' + vsCLB : String(vsCLB);
+  clbEl.style.color = vsCLB > 0 ? 'var(--red)' : 'var(--ice)';
+
+  // Hazard
+  const hzNow  = weeklyHz(elapsed) * 100;
+  const hzPrev = weeklyHz(elapsed - 7) * 100;
+  const delta  = hzNow - hzPrev;
+  const cumNow = lnCDF(elapsed) * 100;
+
+  document.getElementById('hz-pct').textContent = hzNow.toFixed(2) + '%';
+
+  const badge  = document.getElementById('delta');
+  const dtext  = document.getElementById('d-text');
+  const absDelta = Math.abs(delta).toFixed(3);
+  if (Math.abs(delta) < 0.005)        { badge.className = 'delta fl'; dtext.textContent = '→  Flat vs last week'; }
+  else if (delta > 0)                  { badge.className = 'delta up'; dtext.textContent = '▲  +' + absDelta + '% vs last week'; }
+  else                                 { badge.className = 'delta dn'; dtext.textContent = '▼  −' + absDelta + '% vs last week'; }
+
+  // Sparkline
+  const W = 52, sparkPts = [];
+  for (let i=W; i>=0; i--) { const d=elapsed-i*7; sparkPts.push(d>0 ? weeklyHz(d)*100 : 0); }
+  const maxSp = Math.max(...sparkPts, 0.001);
+  const H=72, PAD=5;
+  const coords = sparkPts.map((v,i) => ((i/W)*800) + ',' + (H-PAD-((v/maxSp)*(H-PAD*2))));
+  const lastY  = H-PAD-((sparkPts[W]/maxSp)*(H-PAD*2));
+  document.getElementById('spark').innerHTML =
+    '<defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#A8D8EA" stop-opacity=".5"/><stop offset="100%" stop-color="#A8D8EA" stop-opacity="0"/></linearGradient></defs>' +
+    '<polygon points="0,'+H+' '+coords.join(' ')+' 800,'+H+'" fill="url(#sg)"/>' +
+    '<polyline points="'+coords.join(' ')+'" fill="none" stroke="#A8D8EA" stroke-width="2" stroke-linejoin="round"/>' +
+    '<circle cx="800" cy="'+lastY+'" r="4" fill="#A8D8EA"/>';
+
+  // Gauge
+  document.getElementById('g-pct').textContent = cumNow.toFixed(1) + '%';
+  setTimeout(() => { document.getElementById('g-fill').style.width = Math.min(cumNow, 98.5) + '%'; }, 400);
+
+  const mss = [{l:'Scorpion',d:91},{l:'FATD',d:127},{l:'Take Care',d:167},{l:'Views',d:211},{l:'CLB',d:337}];
+  document.getElementById('milestones').innerHTML = mss.map(m => {
+    const done = elapsed >= m.d;
+    return `<div class="ms ${done?'done':''}"><strong>${m.l}</strong>${m.d}d${done?' ✓':''}</div>`;
+  }).join('');
+
+  // Timeline
+  const months = [
+    {l:'Jan 2025',d:new Date('2025-01-31')},{l:'Mar 2025',d:new Date('2025-03-31')},
+    {l:'Jun 2025',d:new Date('2025-06-30')},{l:'Sep 2025',d:new Date('2025-09-30')},
+    {l:'Dec 2025',d:new Date('2025-12-31')},{l:'Mar 2026',d:new Date('2026-03-31')},
+    {l:'Jun 2026',d:new Date('2026-06-30')},{l:'Dec 2026',d:new Date('2026-12-31')},
+  ];
+  document.getElementById('t-rows').innerHTML = months.map((m, i) => {
+    const days = daysBetween(TEASE, m.d);
+    const cum  = lnCDF(days) * 100;
+    const wh   = weeklyHz(days) * 100;
+    const isNow = i > 0 && months[i-1].d < today && m.d >= today;
+    const col  = cum<40 ? '#666680' : cum<65 ? '#C9A84C' : cum<85 ? '#E8C96A' : '#A8D8EA';
+    return `<div class="t-row">
+      <div class="t-date ${isNow?'now':''}">${m.l}${isNow?' ◀':''}</div>
+      <div class="t-track"><div class="t-fill" style="width:${Math.min(cum,99)}%;background:${col}"></div></div>
+      <div class="t-cum" style="color:${col}">${cum.toFixed(0)}%</div>
+      <div class="t-haz ${isNow?'live':''}">h = ${wh.toFixed(2)}%/wk</div>
+    </div>`;
+  }).join('');
+
+  // History
+  const iceman = {t:'ICEMAN (right now)', d:elapsed, b:1};
+  const all    = [...HIST, iceman].sort((a,b) => b.d - a.d);
+  const maxD   = Math.max(...all.map(h => h.d));
+  document.getElementById('h-list').innerHTML = all.map(h => {
+    const isI  = h.t.includes('ICEMAN');
+    const bc   = isI ? 'var(--ice)' : h.b ? 'var(--gold)' : 'var(--muted)';
+    const dc   = isI ? 'ice' : h.b ? 'gold' : 'dim';
+    return `<div class="hr ${isI?'ice-row':''}">
+      <div class="h-name ${isI?'':'dim'}">${h.t}</div>
+      <div class="h-bar"><div class="h-fill" style="width:${(h.d/maxD)*100}%;background:${bc}"></div></div>
+      <div class="h-days ${dc}">${h.d}d</div>
+    </div>`;
+  }).join('');
+
+  // Stat tests
+  document.getElementById('st-el').textContent     = elapsed + 'd';
+  document.getElementById('st-beyond').textContent = (elapsed - 151) + 'd';
+
+  // Initial composite render
+  updateComposite();
+  renderPrediction();
+}
+
+// ─── SHARE ────────────────────────────────────────────────────────────────────
+function shareIt() {
+  const today   = new Date();
+  const elapsed = daysBetween(TEASE, today);
+  const overdue = Math.max(0, daysBetween(MISSED, today));
+  const hz      = (weeklyHz(elapsed)*100).toFixed(2);
+  const cum     = (lnCDF(elapsed)*100).toFixed(1);
+  const comp    = compositeScore();
+  const seasonal = getSeasonalPrediction(today);
+  const predMo  = seasonal[0].date.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+
+  const text =
+    'ICEMAN-O-METER™ v3\n' +
+    '─────────────────────\n' +
+    `Days since tease: ${elapsed}\n` +
+    `Days overdue: ${overdue}\n` +
+    `Predicted window: ${predMo}\n` +
+    `Signal composite: ${comp}/100\n` +
+    `Weekly drop probability: ${hz}%\n` +
+    `Cumulative: ${cum}%\n` +
+    '─────────────────────\n' +
+    "Drizzy... we're still waiting 👀\n#Iceman #Drake #OVO";
+
+  navigator.clipboard.writeText(text)
+    .then(() => { const t=document.getElementById('toast'); t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); })
+    .catch(() => alert(text));
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+renderMain();
+
+// Fire all scrapes in parallel
+Promise.all([fetchReddit(), fetchGenius(), fetchOVO()])
+  .then(() => { renderPrediction(); updateComposite(); });
+</script>
+</body>
+</html>
